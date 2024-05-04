@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace HamedStack.TheRepository.EntityFrameworkCore.Interceptors;
 
-internal class DomainEventOutboxInterceptor : SaveChangesInterceptor
+public class DomainEventOutboxInterceptor : SaveChangesInterceptor
 {
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result,
         CancellationToken cancellationToken = new())

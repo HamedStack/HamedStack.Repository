@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace HamedStack.TheRepository.EntityFrameworkCore.Interceptors;
 
-internal class SoftDeleteInterceptor : SaveChangesInterceptor
+public class SoftDeleteInterceptor : SaveChangesInterceptor
 {
     public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
     {

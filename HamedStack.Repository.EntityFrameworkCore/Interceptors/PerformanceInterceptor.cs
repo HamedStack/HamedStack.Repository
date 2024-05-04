@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace HamedStack.TheRepository.EntityFrameworkCore.Interceptors;
 
-internal class PerformanceInterceptor : DbCommandInterceptor
+public class PerformanceInterceptor : DbCommandInterceptor
 {
     private const long SlowQueryThreshold = 100; // milliseconds
 

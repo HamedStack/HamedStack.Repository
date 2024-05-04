@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HamedStack.TheRepository.EntityFrameworkCore.Interceptors;
 
-internal sealed class DomainEventInterceptor : SaveChangesInterceptor
+public sealed class DomainEventInterceptor : SaveChangesInterceptor
 {
     private readonly IDomainEventDispatcher _domainEventDispatcher;
 

@@ -1,6 +1,6 @@
 ﻿namespace HamedStack.TheRepository.EntityFrameworkCore.Outbox;
 
-internal class OutboxMessage
+public class OutboxMessage
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
