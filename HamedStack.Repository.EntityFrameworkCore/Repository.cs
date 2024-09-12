@@ -102,6 +102,12 @@ public class Repository<TEntity> : IRepository<TEntity>
         return Task.CompletedTask;
     }
 
+    public Task DeleteAsync(object id, CancellationToken cancellationToken = default)
+    {
+        var entity = DbSet.Find(id);
+        return entity != null ? DeleteAsync(entity, cancellationToken) : Task.CompletedTask;
+    }
+
     public async Task DeleteRangeAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
         var entities = await ToQueryable(specification).ToListAsync(cancellationToken);
