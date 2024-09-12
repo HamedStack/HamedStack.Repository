@@ -176,6 +176,7 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
+        _dbContext.Attach(entity);
         _dbContext.Entry(entity).State = EntityState.Modified;
         var hasAudit = entity is IAudit;
         if (hasAudit)
