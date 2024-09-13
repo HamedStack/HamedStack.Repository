@@ -22,19 +22,19 @@ public class DbContextBase : DbContext, IUnitOfWork
         _logger = logger;
     }
 
-    public async Task<IDbTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
+    public virtual async Task<IDbTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
     {
         _dbContextTransaction = await Database.BeginTransactionAsync(isolationLevel, cancellationToken);
         return _dbContextTransaction.GetDbTransaction();
     }
 
-    public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
+    public virtual async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
         if (_dbContextTransaction != null)
             await _dbContextTransaction.CommitAsync(cancellationToken);
     }
 
-    public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
+    public virtual async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
         try
         {
