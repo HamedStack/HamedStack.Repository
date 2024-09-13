@@ -18,6 +18,7 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public virtual IUnitOfWork UnitOfWork => _dbContext;
     protected virtual DbSet<TEntity> DbSet => _dbContext.Set<TEntity>();
+    protected virtual DbContextBase DbContext => _dbContext;
     public virtual IQueryable<TEntity> Query => DbSet.AsQueryable();
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
