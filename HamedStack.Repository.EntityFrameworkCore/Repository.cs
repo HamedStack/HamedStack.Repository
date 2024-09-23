@@ -23,11 +23,10 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        var hasAudit = entity is IAudit;
-        if (hasAudit)
+        if (entity is IAudit audit)
         {
-            (entity as IAudit)!.CreatedOn = _timeProvider.GetUtcNow();
-            (entity as IAudit)!.CreatedBy = ToString();
+            audit.CreatedOn = _timeProvider.GetUtcNow();
+            audit.CreatedBy = ToString();
         }
 
         await DbSet.AddAsync(entity, cancellationToken);
@@ -103,12 +102,18 @@ public class Repository<TEntity> : IRepository<TEntity>
         return Task.CompletedTask;
     }
 
-    public virtual Task DeleteAsync(object id, CancellationToken cancellationToken = default)
+    public virtual async Task DeleteAsync(object id, CancellationToken cancellationToken = default)
     {
-        var entity = DbSet.Find(id);
-        return entity != null ? DeleteAsync(entity, cancellationToken) : Task.CompletedTask;
+        var entity = await DbSet.FindAsync(id);
+        if (entity != null)
+            await DeleteAsync(entity, cancellationToken);
     }
-
+    public virtual async Task DeleteAsync(object[] ids, CancellationToken cancellationToken = default)
+    {
+        var entity = await DbSet.FindAsync(ids);
+        if (entity != null)
+            await DeleteAsync(entity, cancellationToken);
+    }
     public virtual async Task DeleteRangeAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
         var entities = await ToQueryable(specification).ToListAsync(cancellationToken);
@@ -177,13 +182,11 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public virtual Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        var hasAudit = entity is IAudit;
-        if (hasAudit)
+        if (entity is IAudit audit)
         {
-            (entity as IAudit)!.ModifiedOn = _timeProvider.GetUtcNow();
-            (entity as IAudit)!.ModifiedBy = ToString();
+            audit.ModifiedOn = _timeProvider.GetUtcNow();
+            audit.ModifiedBy = ToString();
         }
-
         DbSet.Update(entity);
         return Task.CompletedTask;
     }

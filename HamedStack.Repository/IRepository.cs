@@ -19,7 +19,7 @@ public interface IRepository<TEntity> : IReadRepository<TEntity> where TEntity :
     Task DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
 
     Task DeleteAsync(object id, CancellationToken cancellationToken = default);
-
+    Task DeleteAsync(object[] ids, CancellationToken cancellationToken = default);
     Task DeleteRangeAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
     Task DeleteRangeAsync(IQueryable<TEntity> query, CancellationToken cancellationToken = default);
 
