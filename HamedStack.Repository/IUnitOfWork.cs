@@ -1,5 +1,7 @@
 ﻿
 using System.Data;
+// ReSharper disable UnusedMemberInSuper.Global
+// ReSharper disable UnusedMember.Global
 
 namespace HamedStack.TheRepository;
 
