@@ -1,6 +1,7 @@
-﻿using HamedStack.Specification;
-// ReSharper disable UnusedMember.Global
+﻿// ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMemberInSuper.Global
+
+using Ardalis.Specification;
 
 namespace HamedStack.TheRepository;
 

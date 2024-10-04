@@ -18,11 +18,6 @@ public class DbContextBase : DbContext, IUnitOfWork
     private IDbContextTransaction? _dbContextTransaction;
 
     /// <summary>
-    /// Gets or sets the <see cref="DbSet{OutboxMessage}"/> used to store outbox messages.
-    /// </summary>
-    internal DbSet<OutboxMessage> OutboxMessages { get; set; } = null!;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="DbContextBase"/> class with the specified options and logger.
     /// </summary>
     /// <param name="options">The options for configuring the context.</param>
@@ -32,6 +27,11 @@ public class DbContextBase : DbContext, IUnitOfWork
     {
         _logger = logger;
     }
+
+    /// <summary>
+    /// Gets or sets the <see cref="DbSet{OutboxMessage}"/> used to store outbox messages.
+    /// </summary>
+    internal DbSet<OutboxMessage> OutboxMessages { get; set; } = null!;
 
     /// <summary>
     /// Begins a new database transaction asynchronously with the specified isolation level.

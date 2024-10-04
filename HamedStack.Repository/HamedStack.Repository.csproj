@@ -1,25 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<WarningsAsErrors>Nullable;CS8600;CS8602;CS8603;CS0619</WarningsAsErrors>
-		<Authors>Hamed Fathi</Authors>
-		<Company />
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<Version>1.0.3</Version>
-		<RootNamespace>HamedStack.TheRepository</RootNamespace>
-		<LangVersion>latest</LangVersion>
-		<PackageProjectUrl>https://github.com/HamedStack/HamedStack.Repository</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/HamedStack/HamedStack.Repository</RepositoryUrl>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-	</PropertyGroup>
-	<ItemGroup>
-		<None Include="..\README.md" Pack="true" PackagePath="\" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="HamedStack.Specification" Version="1.0.3" />
-	</ItemGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable;CS8600;CS8602;CS8603;CS0619</WarningsAsErrors>
+    <Authors>Hamed Fathi</Authors>
+    <Company />
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Version>1.0.4</Version>
+    <RootNamespace>HamedStack.TheRepository</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <PackageProjectUrl>https://github.com/HamedStack/HamedStack.Repository</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HamedStack/HamedStack.Repository</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
+    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
+  </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using HamedStack.Specification;
+using Ardalis.Specification;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMemberInSuper.Global
 
@@ -15,22 +15,6 @@ public interface IReadRepository<TEntity> where TEntity : class
     /// Gets the queryable collection of entities, which can be used to construct LINQ queries.
     /// </summary>
     IQueryable<TEntity> Query { get; }
-
-    /// <summary>
-    /// Determines whether all entities satisfy the specified specification asynchronously.
-    /// </summary>
-    /// <param name="specification">The specification to test the entities against.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation. The task result contains a boolean indicating whether all entities match the specification.</returns>
-    Task<bool> AllAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Determines whether all entities satisfy the specified predicate asynchronously.
-    /// </summary>
-    /// <param name="predicate">The predicate to test the entities against.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation. The task result contains a boolean indicating whether all entities match the predicate.</returns>
-    Task<bool> AllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Determines whether any entity satisfies the specified specification asynchronously.
@@ -103,6 +87,16 @@ public interface IReadRepository<TEntity> where TEntity : class
     Task<List<TEntity>> GetAll(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets all entities that match the specified specification and projects them into a different type asynchronously.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the result to project to.</typeparam>
+    /// <param name="specification">The specification used to filter and project the entities.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains a collection of projected results.</returns>
+    Task<List<TResult>> GetAll<TResult>(ISpecification<TEntity, TResult> specification,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Gets all entities that match the specified query asynchronously.
     /// </summary>
     /// <param name="query">The query to filter the entities.</param>
@@ -115,6 +109,13 @@ public interface IReadRepository<TEntity> where TEntity : class
     /// </summary>
     /// <returns>An asynchronous enumerable of all entities.</returns>
     IAsyncEnumerable<TEntity> GetAsyncEnumerable();
+
+    /// <summary>
+    /// Gets an asynchronous enumerable of all entities that match the specified specification.
+    /// </summary>
+    /// <param name="specification">The specification used to filter the entities.</param>
+    /// <returns>An asynchronous enumerable of matching entities.</returns>
+    IAsyncEnumerable<TEntity> GetAsyncEnumerable(ISpecification<TEntity> specification);
 
     /// <summary>
     /// Gets an entity by its identifier asynchronously.
