@@ -58,12 +58,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The added entity.</returns>
     public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        if (entity is IAudit audit)
-        {
-            audit.CreatedOn = _timeProvider.GetUtcNow();
-            audit.CreatedBy = ToString();
-        }
-
+        ApplyCreatedAuditTime(entity);
         await DbSet.AddAsync(entity, cancellationToken);
         return entity;
     }
@@ -255,14 +250,16 @@ public class Repository<TEntity> : IRepository<TEntity>
     }
 
     /// <summary>
-    /// Retrieves all entities that match the specified specification and projects them into a result type asynchronously.
+    /// Retrieves all entities that match the specified specification and projects them into a
+    /// result type asynchronously.
     /// </summary>
     /// <typeparam name="TResult">The type of the result to project to.</typeparam>
     /// <param name="specification">The specification used to filter and project the entities.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>
-    /// A task representing the asynchronous operation. The task result contains a list of projected entities that match the criteria defined in the specification.
-    /// If a post-processing action is defined in the specification, it will be applied to the result set before returning.
+    /// A task representing the asynchronous operation. The task result contains a list of projected
+    /// entities that match the criteria defined in the specification. If a post-processing action
+    /// is defined in the specification, it will be applied to the result set before returning.
     /// </returns>
     public virtual async Task<List<TResult>> GetAll<TResult>(ISpecification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
     {
@@ -295,7 +292,8 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// </summary>
     /// <param name="specification">The specification used to filter the entities.</param>
     /// <returns>
-    /// An <see cref="IAsyncEnumerable{TEntity}"/> representing the entities that satisfy the criteria defined in the specification.
+    /// An <see cref="IAsyncEnumerable{TEntity}"/> representing the entities that satisfy the
+    /// criteria defined in the specification.
     /// </returns>
     public virtual IAsyncEnumerable<TEntity> GetAsyncEnumerable(ISpecification<TEntity> specification)
     {
@@ -399,11 +397,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="cancellationToken">The cancellation token.</param>
     public virtual Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        if (entity is IAudit audit)
-        {
-            audit.ModifiedOn = _timeProvider.GetUtcNow();
-            audit.ModifiedBy = ToString();
-        }
+        ApplyModifiedAuditTime(entity);
         DbSet.Update(entity);
         return Task.CompletedTask;
     }
@@ -422,14 +416,43 @@ public class Repository<TEntity> : IRepository<TEntity>
     }
 
     /// <summary>
-    /// Applies the given specification to the entities, returning a queryable collection that can be further queried.
+    /// Applies the created audit time and user to the entity if it implements the <see cref="IAudit"/> interface.
+    /// </summary>
+    /// <param name="entity">The entity to which the created audit time will be applied.</param>
+    protected virtual void ApplyCreatedAuditTime(TEntity entity)
+    {
+        if (entity is IAudit audit)
+        {
+            audit.CreatedOn = _timeProvider.GetUtcNow();
+            audit.CreatedBy = ToString();
+        }
+    }
+
+    /// <summary>
+    /// Applies the modified audit time and user to the entity if it implements the <see cref="IAudit"/> interface.
+    /// </summary>
+    /// <param name="entity">The entity to which the modified audit time will be applied.</param>
+    protected virtual void ApplyModifiedAuditTime(TEntity entity)
+    {
+        if (entity is IAudit audit)
+        {
+            audit.ModifiedOn = _timeProvider.GetUtcNow();
+            audit.ModifiedBy = ToString();
+        }
+    }
+
+    /// <summary>
+    /// Applies the given specification to the entities, returning a queryable collection that can
+    /// be further queried.
     /// </summary>
     /// <param name="specification">The specification used to filter and shape the query.</param>
     /// <param name="evaluateCriteriaOnly">
-    /// Indicates whether to evaluate only the criteria portion of the specification without applying includes or projections.
+    /// Indicates whether to evaluate only the criteria portion of the specification without
+    /// applying includes or projections.
     /// </param>
     /// <returns>
-    /// An <see cref="IQueryable{TEntity}"/> representing the query that matches the criteria defined in the specification.
+    /// An <see cref="IQueryable{TEntity}"/> representing the query that matches the criteria
+    /// defined in the specification.
     /// </returns>
     protected virtual IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification, bool evaluateCriteriaOnly = false)
     {
@@ -437,12 +460,16 @@ public class Repository<TEntity> : IRepository<TEntity>
     }
 
     /// <summary>
-    /// Applies the given specification to the entities and projects them into a result type, returning a queryable collection that can be further queried.
+    /// Applies the given specification to the entities and projects them into a result type,
+    /// returning a queryable collection that can be further queried.
     /// </summary>
     /// <typeparam name="TResult">The type of the result to project to.</typeparam>
-    /// <param name="specification">The specification used to filter and shape the query, including the projection logic.</param>
+    /// <param name="specification">
+    /// The specification used to filter and shape the query, including the projection logic.
+    /// </param>
     /// <returns>
-    /// An <see cref="IQueryable{TResult}"/> representing the query that matches the criteria defined in the specification and projected to the specified result type.
+    /// An <see cref="IQueryable{TResult}"/> representing the query that matches the criteria
+    /// defined in the specification and projected to the specified result type.
     /// </returns>
     protected virtual IQueryable<TResult> ApplySpecification<TResult>(ISpecification<TEntity, TResult> specification)
     {
