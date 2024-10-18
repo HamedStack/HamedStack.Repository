@@ -102,6 +102,15 @@ public class DbContextBase : DbContext, IUnitOfWork
     }
 
     /// <summary>
+    /// Configures the conventions for the model by adding a custom convention to automatically add blank triggers.
+    /// </summary>
+    /// <param name="configurationBuilder">The <see cref="ModelConfigurationBuilder"/> used to configure the model conventions.</param>
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Conventions.Add(_ => new BlankTriggerAddingConvention());
+    }
+
+    /// <summary>
     /// Sets up the row version property for entities implementing the <see cref="IRowVersion"/> interface.
     /// </summary>
     /// <param name="modelBuilder">The builder being used to construct the model for the context.</param>
