@@ -7,7 +7,7 @@
     <Authors>Hamed Fathi</Authors>
     <Company />
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <RootNamespace>HamedStack.TheRepository</RootNamespace>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://github.com/HamedStack/HamedStack.Repository</PackageProjectUrl>
