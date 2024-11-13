@@ -234,7 +234,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>A list of all entities.</returns>
     public virtual async Task<List<TEntity>> GetAll(CancellationToken cancellationToken = default)
     {
-        return await DbSet.ToListAsync(cancellationToken);
+        return await DbSet.AsNoTracking().ToListAsync(cancellationToken);
     }
 
     /// <summary>
@@ -245,7 +245,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>A list of all matching entities.</returns>
     public virtual async Task<List<TEntity>> GetAll(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
-        var queryResult = await ApplySpecification(specification).ToListAsync(cancellationToken);
+        var queryResult = await ApplySpecification(specification).AsNoTracking().ToListAsync(cancellationToken);
         return specification.PostProcessingAction == null ? queryResult : specification.PostProcessingAction(queryResult).ToList();
     }
 
@@ -275,7 +275,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>A list of all entities in the query.</returns>
     public virtual async Task<List<TEntity>> GetAll(IQueryable<TEntity> query, CancellationToken cancellationToken = default)
     {
-        return await query.ToListAsync(cancellationToken);
+        return await query.AsNoTracking().ToListAsync(cancellationToken);
     }
 
     /// <summary>
@@ -284,7 +284,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>An async enumerable of the entity type.</returns>
     public virtual IAsyncEnumerable<TEntity> GetAsyncEnumerable()
     {
-        return DbSet.AsAsyncEnumerable();
+        return DbSet.AsNoTracking().AsAsyncEnumerable();
     }
 
     /// <summary>
@@ -297,7 +297,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// </returns>
     public virtual IAsyncEnumerable<TEntity> GetAsyncEnumerable(ISpecification<TEntity> specification)
     {
-        return ApplySpecification(specification).AsAsyncEnumerable();
+        return ApplySpecification(specification).AsNoTracking().AsAsyncEnumerable();
     }
 
     /// <summary>
@@ -337,7 +337,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>A list of entities in the specified page.</returns>
     public virtual async Task<List<TEntity>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
-        return await DbSet.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        return await DbSet.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync(cancellationToken);
     }
 
     /// <summary>
@@ -352,7 +352,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         CancellationToken cancellationToken = default)
     {
         var query = ApplySpecification(specification);
-        return await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        return await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync(cancellationToken);
     }
 
     /// <summary>
@@ -365,7 +365,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>A list of entities in the specified page.</returns>
     public virtual async Task<List<TEntity>> GetPagedAsync(IQueryable<TEntity> query, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
-        return await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        return await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync(cancellationToken);
     }
 
     /// <summary>

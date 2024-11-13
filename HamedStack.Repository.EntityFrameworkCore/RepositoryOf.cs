@@ -241,7 +241,7 @@ public class Repository<TDomainModel, TDatabaseModel> : IRepository<TDomainModel
     /// <returns>A list of all domain model entities.</returns>
     public virtual async Task<List<TDomainModel>> GetAll(CancellationToken cancellationToken = default)
     {
-        var dbEntities = await DbSet.ToListAsync(cancellationToken);
+        var dbEntities = await DbSet.AsNoTracking().ToListAsync(cancellationToken);
         return _mapper.Map<List<TDomainModel>>(dbEntities);
     }
 
@@ -253,7 +253,7 @@ public class Repository<TDomainModel, TDatabaseModel> : IRepository<TDomainModel
     /// <returns>A list of matching domain model entities.</returns>
     public virtual async Task<List<TDomainModel>> GetAll(ISpecification<TDatabaseModel> specification, CancellationToken cancellationToken = default)
     {
-        var dbEntities = await ApplySpecification(specification).ToListAsync(cancellationToken);
+        var dbEntities = await ApplySpecification(specification).AsNoTracking().ToListAsync(cancellationToken);
         return _mapper.Map<List<TDomainModel>>(dbEntities);
     }
 
@@ -278,7 +278,7 @@ public class Repository<TDomainModel, TDatabaseModel> : IRepository<TDomainModel
     /// <returns>A list of matching domain model entities.</returns>
     public virtual async Task<List<TDomainModel>> GetAll(IQueryable<TDatabaseModel> query, CancellationToken cancellationToken = default)
     {
-        var dbEntities = await query.ToListAsync(cancellationToken);
+        var dbEntities = await query.AsNoTracking().ToListAsync(cancellationToken);
         return _mapper.Map<List<TDomainModel>>(dbEntities);
     }
 
@@ -288,7 +288,7 @@ public class Repository<TDomainModel, TDatabaseModel> : IRepository<TDomainModel
     /// <returns>An asynchronous enumerable of domain model entities.</returns>
     public virtual IAsyncEnumerable<TDomainModel> GetAsyncEnumerable()
     {
-        return _mapper.ProjectTo<TDomainModel>(DbSet.AsQueryable()).AsAsyncEnumerable();
+        return _mapper.ProjectTo<TDomainModel>(DbSet.AsNoTracking().AsQueryable()).AsAsyncEnumerable();
     }
 
     /// <summary>
@@ -298,7 +298,7 @@ public class Repository<TDomainModel, TDatabaseModel> : IRepository<TDomainModel
     /// <returns>An asynchronous enumerable of matching domain model entities.</returns>
     public virtual IAsyncEnumerable<TDomainModel> GetAsyncEnumerable(ISpecification<TDatabaseModel> specification)
     {
-        var query = ApplySpecification(specification);
+        var query = ApplySpecification(specification).AsNoTracking();
         return _mapper.ProjectTo<TDomainModel>(query).AsAsyncEnumerable();
     }
 
@@ -340,7 +340,7 @@ public class Repository<TDomainModel, TDatabaseModel> : IRepository<TDomainModel
     /// <returns>A paginated list of domain model entities.</returns>
     public virtual async Task<List<TDomainModel>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
-        var dbEntities = await DbSet.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        var dbEntities = await DbSet.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync(cancellationToken);
         return _mapper.Map<List<TDomainModel>>(dbEntities);
     }
 
@@ -355,7 +355,7 @@ public class Repository<TDomainModel, TDatabaseModel> : IRepository<TDomainModel
     public virtual async Task<List<TDomainModel>> GetPagedAsync(ISpecification<TDatabaseModel> specification, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
         var query = ApplySpecification(specification);
-        var dbEntities = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        var dbEntities = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync(cancellationToken);
         return _mapper.Map<List<TDomainModel>>(dbEntities);
     }
 
@@ -369,7 +369,7 @@ public class Repository<TDomainModel, TDatabaseModel> : IRepository<TDomainModel
     /// <returns>A paginated list of matching domain model entities.</returns>
     public virtual async Task<List<TDomainModel>> GetPagedAsync(IQueryable<TDatabaseModel> query, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
-        var dbEntities = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        var dbEntities = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync(cancellationToken);
         return _mapper.Map<List<TDomainModel>>(dbEntities);
     }
 
