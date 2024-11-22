@@ -58,6 +58,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The added entity.</returns>
     public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
         ApplyCreatedAuditTime(entity);
         await DbSet.AddAsync(entity, cancellationToken);
         return entity;
@@ -71,6 +72,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>A collection of added entities.</returns>
     public virtual async Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
+        if (entities == null) throw new ArgumentNullException(nameof(entities));
         var result = new List<TEntity>();
         foreach (var entity in entities)
         {
@@ -88,6 +90,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>True if any entity satisfies the condition, otherwise false.</returns>
     public virtual async Task<bool> AnyAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
+        if (specification == null) throw new ArgumentNullException(nameof(specification));
         return await ApplySpecification(specification, true).AnyAsync(cancellationToken);
     }
 
@@ -99,6 +102,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>True if any entity satisfies the condition, otherwise false.</returns>
     public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
+        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
         return await DbSet.AnyAsync(predicate, cancellationToken);
     }
 
@@ -110,6 +114,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The count of entities satisfying the condition.</returns>
     public virtual async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
+        if (specification == null) throw new ArgumentNullException(nameof(specification));
         return await ApplySpecification(specification, true).CountAsync(cancellationToken);
     }
 
@@ -131,6 +136,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The count of entities satisfying the condition.</returns>
     public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
+        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
         return await DbSet.CountAsync(predicate, cancellationToken);
     }
 
@@ -141,6 +147,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
         DbSet.Remove(entity);
         await Task.CompletedTask;
     }
@@ -153,6 +160,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task DeleteAsync<TKey>(TKey id, CancellationToken cancellationToken = default) where TKey : notnull
     {
+        if (id == null) throw new ArgumentNullException(nameof(id));
         if (!typeof(IIdentifier<TKey>).IsAssignableFrom(typeof(TEntity)))
         {
             throw new InvalidOperationException($"Entity type {typeof(TEntity).FullName} does not implement {typeof(IIdentifier<TKey>).FullName} interface.");
@@ -168,6 +176,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task DeleteAsync(object[] ids, CancellationToken cancellationToken = default)
     {
+        if (ids == null) throw new ArgumentNullException(nameof(ids));
         var entity = await DbSet.FindAsync(ids, cancellationToken);
         if (entity != null) DbSet.Remove(entity);
     }
@@ -179,6 +188,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="cancellationToken">The cancellation token.</param>
     public virtual Task DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
+        if (entities == null) throw new ArgumentNullException(nameof(entities));
         DbSet.RemoveRange(entities);
         return Task.CompletedTask;
     }
@@ -190,6 +200,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task DeleteRangeAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
+        if (specification == null) throw new ArgumentNullException(nameof(specification));
         var query = ApplySpecification(specification);
         await DeleteRangeAsync(query, cancellationToken);
     }
@@ -201,6 +212,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task DeleteRangeAsync(IQueryable<TEntity> query, CancellationToken cancellationToken = default)
     {
+        if (query == null) throw new ArgumentNullException(nameof(query));
         var entities = await GetAll(query, cancellationToken);
         await DeleteRangeAsync(entities, cancellationToken);
     }
@@ -213,6 +225,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The first matching entity, or null if no match is found.</returns>
     public virtual async Task<TEntity?> FirstOrDefaultAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
+        if (specification == null) throw new ArgumentNullException(nameof(specification));
         return await ApplySpecification(specification).FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -224,6 +237,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The first matching entity, or null if no match is found.</returns>
     public virtual async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
+        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
         return await DbSet.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
@@ -245,6 +259,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>A list of all matching entities.</returns>
     public virtual async Task<List<TEntity>> GetAll(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
+        if (specification == null) throw new ArgumentNullException(nameof(specification));
         var queryResult = await ApplySpecification(specification).AsNoTracking().ToListAsync(cancellationToken);
         return specification.PostProcessingAction == null ? queryResult : specification.PostProcessingAction(queryResult).ToList();
     }
@@ -263,6 +278,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// </returns>
     public virtual async Task<List<TResult>> GetAll<TResult>(ISpecification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
     {
+        if (specification == null) throw new ArgumentNullException(nameof(specification));
         var queryResult = await ApplySpecification(specification).ToListAsync(cancellationToken);
         return specification.PostProcessingAction == null ? queryResult : specification.PostProcessingAction(queryResult).ToList();
     }
@@ -275,6 +291,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>A list of all entities in the query.</returns>
     public virtual async Task<List<TEntity>> GetAll(IQueryable<TEntity> query, CancellationToken cancellationToken = default)
     {
+        if (query == null) throw new ArgumentNullException(nameof(query));
         return await query.AsNoTracking().ToListAsync(cancellationToken);
     }
 
@@ -297,6 +314,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// </returns>
     public virtual IAsyncEnumerable<TEntity> GetAsyncEnumerable(ISpecification<TEntity> specification)
     {
+        if (specification == null) throw new ArgumentNullException(nameof(specification));
         return ApplySpecification(specification).AsNoTracking().AsAsyncEnumerable();
     }
 
@@ -309,6 +327,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The entity if found, or null if not found.</returns>
     public virtual async ValueTask<TEntity?> GetByIdAsync<TKey>(TKey id, CancellationToken cancellationToken = default) where TKey : notnull
     {
+        if (id == null) throw new ArgumentNullException(nameof(id));
         if (!typeof(IIdentifier<TKey>).IsAssignableFrom(typeof(TEntity)))
         {
             throw new InvalidOperationException($"Entity type {typeof(TEntity).FullName} does not implement {typeof(IIdentifier<TKey>).FullName} interface.");
@@ -325,6 +344,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The entity if found, or null if not found.</returns>
     public virtual async ValueTask<TEntity?> GetByIdsAsync(object[] ids, CancellationToken cancellationToken = default)
     {
+        if (ids == null) throw new ArgumentNullException(nameof(ids));
         return await DbSet.FindAsync(ids, cancellationToken);
     }
 
@@ -337,6 +357,9 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>A list of entities in the specified page.</returns>
     public virtual async Task<List<TEntity>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
+        if (pageNumber <= 0) throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than zero.");
+        if (pageSize <= 0) throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than zero.");
+
         return await DbSet.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync(cancellationToken);
     }
 
@@ -351,6 +374,9 @@ public class Repository<TEntity> : IRepository<TEntity>
     public virtual async Task<List<TEntity>> GetPagedAsync(ISpecification<TEntity> specification, int pageNumber, int pageSize,
         CancellationToken cancellationToken = default)
     {
+        if (pageNumber <= 0) throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than zero.");
+        if (pageSize <= 0) throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than zero.");
+
         var query = ApplySpecification(specification);
         return await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync(cancellationToken);
     }
@@ -365,6 +391,9 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>A list of entities in the specified page.</returns>
     public virtual async Task<List<TEntity>> GetPagedAsync(IQueryable<TEntity> query, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
+        if (pageNumber <= 0) throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than zero.");
+        if (pageSize <= 0) throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than zero.");
+
         return await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync(cancellationToken);
     }
 
@@ -376,6 +405,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The single matching entity, or null if no match is found.</returns>
     public virtual async Task<TEntity?> SingleOrDefaultAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
+        if (specification == null) throw new ArgumentNullException(nameof(specification));
         return await ApplySpecification(specification).SingleOrDefaultAsync(cancellationToken);
     }
 
@@ -387,6 +417,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The single matching entity, or null if no match is found.</returns>
     public virtual async Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
+        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
         return await DbSet.SingleOrDefaultAsync(predicate, cancellationToken);
     }
 
@@ -397,6 +428,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="cancellationToken">The cancellation token.</param>
     public virtual Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
         ApplyModifiedAuditTime(entity);
         DbSet.Update(entity);
         return Task.CompletedTask;
@@ -409,6 +441,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
+        if (entities == null) throw new ArgumentNullException(nameof(entities));
         foreach (var entity in entities)
         {
             await UpdateAsync(entity, cancellationToken);
@@ -421,6 +454,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="entity">The entity to which the created audit time will be applied.</param>
     protected virtual void ApplyCreatedAuditTime(TEntity entity)
     {
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
         if (entity is IAudit audit)
         {
             audit.CreatedOn = _timeProvider.GetUtcNow();
@@ -434,6 +468,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="entity">The entity to which the modified audit time will be applied.</param>
     protected virtual void ApplyModifiedAuditTime(TEntity entity)
     {
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
         if (entity is IAudit audit)
         {
             audit.ModifiedOn = _timeProvider.GetUtcNow();
@@ -456,6 +491,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// </returns>
     protected virtual IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification, bool evaluateCriteriaOnly = false)
     {
+        if (specification == null) throw new ArgumentNullException(nameof(specification));
         return SpecificationEvaluator.Default.GetQuery(DbSet.AsQueryable(), specification, evaluateCriteriaOnly);
     }
 
@@ -473,6 +509,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// </returns>
     protected virtual IQueryable<TResult> ApplySpecification<TResult>(ISpecification<TEntity, TResult> specification)
     {
+        if (specification == null) throw new ArgumentNullException(nameof(specification));
         return SpecificationEvaluator.Default.GetQuery(DbSet.AsQueryable(), specification);
     }
 }
