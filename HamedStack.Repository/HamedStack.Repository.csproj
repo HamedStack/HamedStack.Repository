@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>Nullable;CS8600;CS8602;CS8603;CS0619</WarningsAsErrors>
     <Authors>Hamed Fathi</Authors>
     <Company />
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <RootNamespace>HamedStack.TheRepository</RootNamespace>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://github.com/HamedStack/HamedStack.Repository</PackageProjectUrl>

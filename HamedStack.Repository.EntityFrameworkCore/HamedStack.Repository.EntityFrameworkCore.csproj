@@ -1,31 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<WarningsAsErrors>Nullable;CS8600;CS8602;CS8603;CS0619</WarningsAsErrors>
-		<Authors>Hamed Fathi</Authors>
-		<Company />
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<Version>1.0.13</Version>
-		<RootNamespace>HamedStack.TheRepository.EntityFrameworkCore</RootNamespace>
-		<LangVersion>latest</LangVersion>
-		<PackageProjectUrl>https://github.com/HamedStack/HamedStack.Repository</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/HamedStack/HamedStack.Repository</RepositoryUrl>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-	</PropertyGroup>
-	<ItemGroup>
-		<None Include="..\README.md" Pack="true" PackagePath="\" />
-	</ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable;CS8600;CS8602;CS8603;CS0619</WarningsAsErrors>
+    <Authors>Hamed Fathi</Authors>
+    <Company />
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Version>1.0.14</Version>
+    <RootNamespace>HamedStack.TheRepository.EntityFrameworkCore</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <PackageProjectUrl>https://github.com/HamedStack/HamedStack.Repository</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HamedStack/HamedStack.Repository</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
   <ItemGroup>
-	  <PackageReference Include="HamedStack.AggregateRoot" Version="1.0.0" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.8" />
-	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
-	  <ProjectReference Include="..\HamedStack.Repository\HamedStack.Repository.csproj" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HamedStack.AggregateRoot" Version="1.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
+    <ProjectReference Include="..\HamedStack.Repository\HamedStack.Repository.csproj" />
   </ItemGroup>
 </Project>
