@@ -83,14 +83,14 @@ public class OutboxBackgroundService : BackgroundService
                         await dispatcher.DispatchEventAsync(domainEvent, stoppingToken);
 
                         message.IsProcessed = true;
-                        message.ProcessedOn = DateTimeOffset.Now;
+                        message.ProcessedOn = DateTime.Now;
                     }
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Failed to process message {MessageId}", message.Id);
                         message.IsProcessed = false;
                         message.RetryCount = (message.RetryCount ?? 0) + 1;
-                        message.ProcessedOn = DateTimeOffset.Now;
+                        message.ProcessedOn = DateTime.Now;
                     }
                 }
 

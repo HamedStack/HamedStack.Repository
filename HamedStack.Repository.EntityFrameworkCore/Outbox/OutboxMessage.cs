@@ -31,7 +31,7 @@ public class OutboxMessage
     /// <remarks>
     /// This indicates when the message was initially added to the outbox.
     /// </remarks>
-    public DateTimeOffset CreatedOn { get; set; }
+    public DateTime CreatedOn { get; set; }
 
     /// <summary>
     /// Gets or sets the timestamp when the message was processed.
@@ -39,7 +39,7 @@ public class OutboxMessage
     /// <remarks>
     /// If the message has not yet been processed, this value will be <c>null</c>.
     /// </remarks>
-    public DateTimeOffset? ProcessedOn { get; set; }
+    public DateTime? ProcessedOn { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the message has been processed.

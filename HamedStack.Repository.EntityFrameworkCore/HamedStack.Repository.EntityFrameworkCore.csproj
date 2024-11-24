@@ -8,7 +8,7 @@
     <Authors>Hamed Fathi</Authors>
     <Company />
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>1.0.18</Version>
+    <Version>1.0.19</Version>
     <RootNamespace>HamedStack.TheRepository.EntityFrameworkCore</RootNamespace>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://github.com/HamedStack/HamedStack.Repository</PackageProjectUrl>
