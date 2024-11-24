@@ -8,8 +8,8 @@
     <Authors>Hamed Fathi</Authors>
     <Company />
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Version>1.0.18</Version>
-    <RootNamespace>HamedStack.TheRepository.EntityFrameworkCore</RootNamespace>
+    <Version>1.0.0</Version>
+    <RootNamespace>HamedStack.TheRepository.ServiceCollection</RootNamespace>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://github.com/HamedStack/HamedStack.Repository</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HamedStack/HamedStack.Repository</RepositoryUrl>
@@ -21,10 +21,6 @@
     <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HamedStack.AggregateRoot" Version="1.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.11" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
-    <ProjectReference Include="..\HamedStack.Repository\HamedStack.Repository.csproj" />
+    <ProjectReference Include="..\HamedStack.Repository.EntityFrameworkCore\HamedStack.Repository.EntityFrameworkCore.csproj" />
   </ItemGroup>
 </Project>

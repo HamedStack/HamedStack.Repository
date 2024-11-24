@@ -1,6 +1,8 @@
 ﻿using System.Data;
 using System.Linq.Expressions;
+using System.Text.Json;
 using HamedStack.TheAggregateRoot.Abstractions;
+using HamedStack.TheAggregateRoot.Events;
 using HamedStack.TheRepository.EntityFrameworkCore.Interceptors;
 using HamedStack.TheRepository.EntityFrameworkCore.Outbox;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,7 @@ namespace HamedStack.TheRepository.EntityFrameworkCore;
 /// </summary>
 public class DbContextBase : DbContext, IUnitOfWork
 {
+    private readonly List<DomainEvent> _domainEvents = new();
     private readonly ILogger<DbContextBase> _logger;
     private IDbContextTransaction? _dbContextTransaction;
 
@@ -32,6 +35,24 @@ public class DbContextBase : DbContext, IUnitOfWork
     /// Gets or sets the <see cref="DbSet{OutboxMessage}"/> used to store outbox messages.
     /// </summary>
     internal DbSet<OutboxMessage> OutboxMessages { get; set; } = null!;
+
+    /// <summary>
+    /// Adds one or more domain events to the internal collection.
+    /// </summary>
+    /// <param name="domainEvents">An array of <see cref="DomainEvent"/> to add.</param>
+    public void AddDomainEvents(params DomainEvent[] domainEvents)
+    {
+        _domainEvents.AddRange(domainEvents);
+    }
+
+    /// <summary>
+    /// Adds a collection of domain events to the internal collection.
+    /// </summary>
+    /// <param name="domainEvents">An <see cref="IEnumerable{T}"/> of <see cref="DomainEvent"/> to add.</param>
+    public void AddDomainEvents(IEnumerable<DomainEvent> domainEvents)
+    {
+        _domainEvents.AddRange(domainEvents);
+    }
 
     /// <summary>
     /// Begins a new database transaction asynchronously with the specified isolation level.
@@ -79,6 +100,67 @@ public class DbContextBase : DbContext, IUnitOfWork
     }
 
     /// <summary>
+    /// Saves changes made in the context to the database and applies domain events to the outbox.
+    /// </summary>
+    /// <returns>The number of state entries written to the database.</returns>
+    public override int SaveChanges()
+    {
+        ApplyDomainEvents();
+        return base.SaveChanges();
+    }
+
+    /// <summary>
+    /// Saves changes made in the context to the database with an option to accept all changes, and applies domain events to the outbox.
+    /// </summary>
+    /// <param name="acceptAllChangesOnSuccess">
+    /// A boolean value indicating whether all changes should be accepted if the operation is successful.
+    /// </param>
+    /// <returns>The number of state entries written to the database.</returns>
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        ApplyDomainEvents();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    /// <summary>
+    /// Asynchronously saves changes made in the context to the database and applies domain events to the outbox.
+    /// </summary>
+    /// <param name="cancellationToken">
+    /// A token to observe while waiting for the task to complete.
+    /// </param>
+    /// <returns>A task that represents the asynchronous save operation. The task result contains the number of state entries written to the database.</returns>
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        ApplyDomainEvents();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Asynchronously saves changes made in the context to the database with an option to accept all changes, and applies domain events to the outbox.
+    /// </summary>
+    /// <param name="acceptAllChangesOnSuccess">
+    /// A boolean value indicating whether all changes should be accepted if the operation is successful.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A token to observe while waiting for the task to complete.
+    /// </param>
+    /// <returns>A task that represents the asynchronous save operation. The task result contains the number of state entries written to the database.</returns>
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+    {
+        ApplyDomainEvents();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    /// <summary>
+    /// Configures the conventions for the model by adding a custom convention to automatically add blank triggers.
+    /// </summary>
+    /// <param name="configurationBuilder">The <see cref="ModelConfigurationBuilder"/> used to configure the model conventions.</param>
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Conventions.Add(_ => new BlankTriggerAddingConvention());
+    }
+
+    /// <summary>
     /// Configures the database context with additional options and interceptors.
     /// </summary>
     /// <param name="optionsBuilder">A builder used to configure the context options.</param>
@@ -99,15 +181,6 @@ public class DbContextBase : DbContext, IUnitOfWork
         SetRowVersion(modelBuilder);
         SetSoftDeleteQueryFilter(modelBuilder);
         base.OnModelCreating(modelBuilder);
-    }
-
-    /// <summary>
-    /// Configures the conventions for the model by adding a custom convention to automatically add blank triggers.
-    /// </summary>
-    /// <param name="configurationBuilder">The <see cref="ModelConfigurationBuilder"/> used to configure the model conventions.</param>
-    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
-    {
-        configurationBuilder.Conventions.Add(_ => new BlankTriggerAddingConvention());
     }
 
     /// <summary>
@@ -143,5 +216,29 @@ public class DbContextBase : DbContext, IUnitOfWork
             var filterExpression = Expression.Lambda(Expression.Equal(property, Expression.Constant(false)), parameter);
             modelBuilder.Entity(entityClrType).HasQueryFilter(filterExpression);
         }
+    }
+
+    /// <summary>
+    /// Applies all pending domain events by converting them into outbox messages and clearing the internal collection.
+    /// </summary>
+    /// <remarks>
+    /// Each domain event is serialized and stored as an <see cref="OutboxMessage"/> for processing.
+    /// </remarks>
+    private void ApplyDomainEvents()
+    {
+        foreach (var domainEvent in _domainEvents)
+        {
+            OutboxMessages.Add(new OutboxMessage()
+            {
+                Id = Guid.NewGuid(),
+                Name = domainEvent.GetType().Name,
+                Content = JsonSerializer.Serialize(domainEvent, domainEvent.GetType()),
+                CreatedOn = DateTimeOffset.Now,
+                IsProcessed = false,
+                ProcessedOn = null,
+            });
+        }
+
+        _domainEvents.Clear();
     }
 }
